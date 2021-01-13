@@ -24,6 +24,9 @@ train_dataset.info()
 #Sütunları kontrol ediyoruz.
 print(train_dataset.columns )
 
+#Sütun ve Satırları Train ve Test için yazdır
+print('\ntrain dataset: %s, test dataset %s' %(str(train_dataset.shape), str(test_dataset.shape)) )
+
 #---------------------------------------------------------------------------------------
 
 #İki veri setindeki toplam yolcu sayısı
@@ -57,6 +60,13 @@ display(test_dataset.isnull().sum())
 
 #---------------------------------------------------------------------------------------
 
+#Eğitim verilerinde yaş, kabin ve başlangıçlar sütununda eksiklerimiz var.
+#Test veri setinde yaş, ücret ve kabin sütununda eksiklikler var. 
+#Her iki veri setini birleştireceğiz ve tüm veri seti için veri temizliğini gerçekleştireceğiz.
+#train ve test 
 
+df_all = concat_df(train_dataset , test_dataset)
+
+#---------------------------------------------------------------------------------------
 
 
