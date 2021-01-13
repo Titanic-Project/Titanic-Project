@@ -13,16 +13,17 @@ import seaborn as sns
 train_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\train.csv')     #(r'C:\Users\Fatma\Downloads\titanic_data.csv')
 
 #Eğitim verisetini pandas kütüphanesi ile tanımlıyoruz.
-test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')
+test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')     #(r'C:\Users\Fatma\Downloads\test_data.csv')
 
 #---------------------------------------------------------------------------------------
 
 train_dataset.info()
-
+test_dataset.info()
 #---------------------------------------------------------------------------------------
 
 #Sütunları kontrol ediyoruz.
 print(train_dataset.columns )
+print(test_dataset.columns)
 
 #Sütun ve Satırları Train ve Test için yazdır
 print('\ntrain dataset: %s, test dataset %s' %(str(train_dataset.shape), str(test_dataset.shape)) )
@@ -36,12 +37,12 @@ print(train_dataset.shape[0] + test_dataset.shape[0])
 
 #Hayatta kalma oranı
 train_dataset['Survived'].mean()
-
+test_dataset['Survived'].mean()
 #---------------------------------------------------------------------------------------
 
 #Ilk 5 veriyi tablo şeklinde göster
 train_dataset.head()
-
+test_dataset.head()
 #---------------------------------------------------------------------------------------
 
 #Eksik sütünları göster
