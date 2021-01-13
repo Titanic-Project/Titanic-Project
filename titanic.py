@@ -17,6 +17,10 @@ test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')
 
 #---------------------------------------------------------------------------------------
 
+train_dataset.info()
+
+#---------------------------------------------------------------------------------------
+
 #Sütunları kontrol ediyoruz.
 print(train_dataset.columns )
 
@@ -52,6 +56,7 @@ print("Missings in the test data: ")
 display(test_dataset.isnull().sum())
 
 #---------------------------------------------------------------------------------------
+
 
 
 
