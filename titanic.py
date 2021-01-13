@@ -45,5 +45,13 @@ print(train_dataset.columns[train_dataset.isna().any()])
 #test setinde eksik değerleri olan sütunları listele
 print(test_dataset.columns[test_dataset.isna().any()])
 
+#Eksiklik verileri şu şekilde de gösterebiliriz
+print("Missings in the train data: ")
+display(train_dataset.isnull().sum())
+print("Missings in the test data: ") 
+display(test_dataset.isnull().sum())
+
 #---------------------------------------------------------------------------------------
+
+
 
