@@ -179,6 +179,10 @@ df_all[['Age', 'Survived']].groupby('Age')['Survived'].mean()
 
 df_all[['Fare', 'Survived']].groupby('Fare')['Survived'].mean()      
 #------------------------------------------------------------------------------------------------------,
-      
-      
+
+df_all[['Age', 'Survived']].groupby('Age')['Survived'].mean().plot(kind='bar', figsize=(15,7))
+plt.suptitle('Survival rates for age categories')      
+ 
+df_all[['Fare', 'Survived']].groupby('Fare')['Survived'].mean().plot(kind='bar', figsize=(15,7))
+plt.suptitle('Survival rates for fare categories')         
       
