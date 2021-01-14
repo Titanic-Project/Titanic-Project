@@ -91,7 +91,7 @@ print('Number of cases:')
 display(train_dataset.groupby(['Pclass','Sex'])['Age'].count()) 
       
 #replace the missings values with the medians of each group
-df_all['Age']= df_all.groupby(['Pclass','Sex'])['Age'].apply(lamba x:x.fillna(x.median()))
+df_all['Age']= df_all.groupby(['Pclass','Sex'])['Age'].apply(lambda x:x.fillna(x.median()))
 
       
 #----------------------------------------------------------------------------------------------
