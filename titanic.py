@@ -171,4 +171,13 @@ df_all['Age'] = pd.cut(df_all['Age'].astype(int), 5 )
 print("For age, each category has a different number of cases:")
 df_all['Age'].value_counts()
       
+print("For fare, each category has a different number of cases:")
+df_all['Fare'].value_counts()
 #------------------------------------------------------------------------------------------------------
+
+df_all[['Age', 'Survived']].groupby('Age')['Survived'].mean()
+
+#------------------------------------------------------------------------------------------------------,
+      
+      
+      
