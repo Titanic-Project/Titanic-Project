@@ -109,4 +109,29 @@ mr_thomas=df_all.loc[(df_all['Pclass']==3)&(df_all['SibSp']==0)&(df_all['Embarke
 display(train_dataset['Cabin'].unique())
 print("There are "+ str(train_dataset['Cabin'].nunique()) + " different values for Cabin and " + str(train_dataset['Cabin'].isnull().sum()) + " cases are missing."
       
-#keep all first letters of cabin      
+#keep all first letters of cabin in a new variable and use "M" for each missing
+df_all['Deck'] = df_all['Cabin'].apply(lambda s: s[0] if pd.notnull(s) else 'M' )
+
+      
+df_all[['Deck','Survived']].groupby('Deck')['Survived'].mean().plot(kind='bar',figsize=(15,7))
+pl.suptitle('Survival rates for diffrent cabins')
+      
+      
+#Hayatta kalma oranlarında önemli farklılıklar var çünkü üst güvertelerdeki konuklar filikalarda daha hızlıydı.
+#Bazı desteleri gruplayacağız.      
+      
+      
+idx=df_all[df_all['Deck'] == 'T'].index
+df_all.loc[idx,'Deck'] = 'A'   
+df_all['Deck']= df_all['Deck'].replace(['A','B','C'],'ABC')
+df_all['Deck']= df_all['Deck'].replace(['D','E'],'DE')
+df_all['Deck']= df_all['Deck'].replace(['F','G'],'FG')      
+df_all['Deck'].value_counts()
+      
+
+#------------------------------------------------------------------------------------------------------
+      
+#gemiye bindiler
+      
+df_all.loc[df_all]['Embarked'].isnull()]
+      
