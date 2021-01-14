@@ -186,3 +186,99 @@ plt.suptitle('Survival rates for age categories')
 df_all[['Fare', 'Survived']].groupby('Fare')['Survived'].mean().plot(kind='bar', figsize=(15,7))
 plt.suptitle('Survival rates for fare categories')         
       
+#-----------------------------------------------------------------------------------------------------------------
+#Veri setimizde bize aile büyüklüğü hakkında bir şeyler söyleyen iki ilginç değişken var. 
+#SibSp, bir yolcunun kaç tane kardeşi ve eşi olduğunu tanımlar ve kaç tane ebeveyn ve çocuk parch. 
+#Bu değişkenleri özetleyebilir ve aile boyutunu elde etmek için 1 ekleyebiliriz (her yoldan geçen için).     
+      
+df_all['Family_Size'] = df_all['SibSp'] + df_all['Parch'] + 1
+df_all['Family_Size'].hist(figsize=(15,7))
+      
+df_all['Family_Size_bin']=df_all['Family_Size'].map(lambda s: 1 if s== 1 else (2 if s ==2 else(3 if <= s <= 4 else(4 if s >= 5 else 0)))))
+
+df_all['Family_Size_bin'].value_counts()
+
+#Bir tez, ailelerin hayatta kalma şansının bekarlara göre daha yüksek olduğu, çünkü kendilerini daha iyi destekleyebildikleri ve öncelikli olarak kurtarıldıklarıdır.
+# Bununla birlikte, aileler çok büyükse, istisnai bir durumda koordinasyon muhtemelen çok zor olacaktır.
+
+df_all[['Family_Size_bin','Survived']].groupby('Family_Size_bin')['Survived'].mean().plot(kind='bar' , figsize=(15,7))
+pl.suptitle('Survival rates for family size categories')
+
+#--------------------------------------------------------------------------------------------------------------------------
+#biletler
+df_all['Ticket_Frequency'] = df_all.groupby('Ticket')['Ticket'].transform('count')
+
+#Bilet sıklıkları ile hayatta kalma oranları arasında bir korelasyon bekliyoruz, çünkü aynı bilet numaraları, insanların birlikte seyahat ettiklerinin bir göstergesi.
+df_all[['Ticket_Frequency','Survived']].groupby('Ticket_Frequency').mean()
+#--------------------------------------------------------------------------------------------------------------------------------------
+#İsim bize bir yolcunun sosyoekonomik durumu hakkında çok önemli bilgiler veriyor. 
+#Birinin evli olup olmadığı veya daha yüksek bir sosyal statünün göstergesi olabilecek resmi bir unvanı olup olmadığı sorusuna cevap verebiliriz.
+
+df_all['Title'] = df_all['Name'].str.split(',', expand=True)[1].str.split('.',expand=True)[0]
+df_all['Is_Married'] = 0
+df_all['Is_Married'].loc[df_all['Title'] == 'Mrs'] =1
+df_all['Title'].nunique()
+#Veri setimizde pek çok farklı başlık var.
+# Yalnızca 10'dan fazla davaya sahip başlığı dikkate alıyoruz, diğerlerinin tümünü "misc" kategorisine atayacağız.
+title_names = (df_all['Title'].value_counts() < 10)
+df_all['Title'] = df_all['Title'].apply(lambda x: 'Misc' if title_names.loc[x] == True else x)
+df_all.groupby('Title')['Title'].count()
+
+#----------------------------------------------------------------
+#Yolcuların soyadlarını belirleyeceğiz. 
+#Daha sonra hem eğitimde hem de test veri setinde bulunan herhangi bir aile üyesi olup olmadığını görebiliriz.
+import string
+
+def extract_surname(data):
+    families=[]
+    for i in range(len(data)):
+        name = data.iloc[i]
+        if '(' in name:
+            name_no_bracket = name.split('(')[0]
+        else:
+            name_no_bracket = name
+        family = name_no_bracket.split(',')[0] 
+        title = name_no_bracket.split(',')[1].strip().split(' ')[0]
+        for c in string.punctuation:
+            family = family.replace(c, '').strip()
+         families.append(family)
+        
+       return families
+df_all['Family'] = extract_surname(df_all['Name'])
+
+df_all['Family'].nunique()
+
+#Yüksek lisans derecesine sahip kişiler ve kadınlar, önemli ölçüde daha sık hayatta kaldılar ve aynı zamanda ortalama olarak daha büyük ailelere sahipler. 
+#Eğitim veri setinde bir usta veya kadın hayatta kalan olarak işaretlenirse, test veri setindeki aile üyelerinin de hayatta kalacağını varsayıyoruz.
+      
+df_all[['Title','Survived','Family_Size']].groupby('Title').mean()
+
+print('Survival rates grouped by families of women in dataset:')
+df_all.loc[(df_all['Sex'] == 'female') & (df_all['Family_Size'] > 1)].groupby('Family')['Survived'].mean().hist(figsize=(12,5))
+
+#Aile büyüklüğü 2 veya daha fazla olan kadınlarda, çoğu zaman hepsi veya hiçbiri ölmez.
+
+master_families = df_all.loc[df_all['Title'] == 'Master']['Family'].tolist()
+df_all.loc[df_all['Family'].isin(master_families)].groupby('Family')['Survived'].mean().hist(figsize(12,5))
+
+#Aynısı, unvanında kaptan olan yolcu aileleri için de geçerlidir.
+
+women_rate = df_all.loc[(df_all['Sex'] == 'female') & (df_all['Family_Size'] > 1 )].groupby('Family')['Survived'].mean()
+master_rate = df_all.loc[df_all['Family'].isin(master_families)].groupby('Family')['Survived'].mean()
+
+combined_rate = women_rate.append(master_rate)
+
+combined_rate_df = combined_rate.to_frame().reset_index().rename(columns = {'Survived ':'Survival_quota}).drop_duplicates(subset = 'Family')
+
+df_all =pd.merge(df_all,combined_rate_df ,how = 'left')
+                                                                            
+                                                                            
+                                                                            
+df_all['Survival_quota_NA'] = 1
+df_all.loc[df_all['Survival_quota'].isnull(), 'Survival_quota_NA']=0                                                                            
+df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)                                                                            
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+      
