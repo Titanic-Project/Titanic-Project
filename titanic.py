@@ -113,15 +113,17 @@ print(mr_thomas)
 #kabine bakıyoruz belki de önemli bir belirleyici olabilir.
       
 display(train_dataset['Cabin'].unique())
-print("There are "+ str(train_dataset['Cabin'].nunique()) + " different values for Cabin and " + str(train_dataset['Cabin'].isnull().sum()) + " cases are missing."
+print("There are "+ str(train_dataset['Cabin'].nunique()) + " different values for Cabin and " + str(train_dataset['Cabin'].isnull().sum()) + " cases are missing.")
+      
+#------------------------------------------------------------------------------------------------------------
       
 #keep all first letters of cabin in a new variable and use "M" for each missing
 df_all['Deck'] = df_all['Cabin'].apply(lambda s: s[0] if pd.notnull(s) else 'M' )
-
       
 df_all[['Deck','Survived']].groupby('Deck')['Survived'].mean().plot(kind='bar',figsize=(15,7))
-pl.suptitle('Survival rates for diffrent cabins')
+plt.suptitle('Survival rates for diffrent cabins')
       
+#------------------------------------------------------------------------------------------------------------      
       
 #Hayatta kalma oranlarında önemli farklılıklar var çünkü üst güvertelerdeki konuklar filikalarda daha hızlıydı.
 #Bazı desteleri gruplayacağız.      
@@ -139,5 +141,7 @@ df_all['Deck'].value_counts()
       
 #gemiye bindiler
       
-df_all.loc[df_all]['Embarked'].isnull()]
+df_all.loc[df_all['Embarked'].isnull()]
+     
+#------------------------------------------------------------------------------------------------------
       
