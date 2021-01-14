@@ -61,6 +61,13 @@ display(test_dataset.isnull().sum())
 
 #---------------------------------------------------------------------------------------
 
+#train ve test data setini pandas kütüphanesinin concat metoduyla birleştiren fonksyon
+
+def concat_df(train_dataset,test_dataset):
+    return pd.concat([train_dataset, test_dataset], sort= True).reset_index(drop=True)
+  
+#---------------------------------------------------------------------------------------  
+
 #Eğitim verilerinde yaş, kabin ve başlangıçlar sütununda eksiklerimiz var.
 #Test veri setinde yaş, ücret ve kabin sütununda eksiklikler var. 
 #Her iki veri setini birleştireceğiz ve tüm veri seti için veri temizliğini gerçekleştireceğiz.
