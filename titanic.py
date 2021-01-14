@@ -77,4 +77,36 @@ df_all = concat_df(train_dataset , test_dataset)
 
 #---------------------------------------------------------------------------------------
 
+#yaş sütünumuzun yüzdelik olarak ne kadar eksik verisi olduğunu görmek için
+print("Missings for Age in the entire data set: " + str(df_all['Age'].isnull().sum()))
+print("Missings in percentage: " + str(round(df_all['Age'].isnull().sum()/len(df_all)*100,0))
 
+#yaş veri setimizin içinde değerlendirmeye devam ediyoruz
+      
+print('Median for Age seperated by Pclass:')    
+display(train_dataset.groupby('Pclass')['Age'].median())      
+print('Median for Age seperated by Pclass and Sex:')    
+display(train_dataset.groupby(['Pclass','Sex'])['Age'].median()) 
+print('Number of cases:')    
+display(train_dataset.groupby(['Pclass','Sex'])['Age'].count()) 
+      
+#replace the missings values with the medians of each group
+df_all['Age']= df_all.groupby(['Pclass','Sex'])['Age'].apply(lamba x:x.fillna(x.median()))
+
+      
+#----------------------------------------------------------------------------------------------
+#ücretlere bakıyoruz şimdi de      
+df_all.loc[df_all['Fare'].isnull()] 
+      
+#loc cases which are similar to Mr.Thomas and use the median of fare to replace  the missing for his data set
+      
+mr_thomas=df_all.loc[(df_all['Pclass']==3)&(df_all['SibSp']==0)&(df_all['Embarked']=='S')]['Fare'].median()
+      
+
+#------------------------------------------------------------------------------------------------------------
+#kabine bakıyoruz belki de önemli bir belirleyici olabilir.
+      
+display(train_dataset['Cabin'].unique())
+print("There are "+ str(train_dataset['Cabin'].nunique()) + " different values for Cabin and " + str(train_dataset['Cabin'].isnull().sum()) + " cases are missing."
+      
+#keep all first letters of cabin      
