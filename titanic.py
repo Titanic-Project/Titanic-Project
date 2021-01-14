@@ -165,3 +165,10 @@ df_all.boxplot(column=['Age'], figsize=(15,7))
       
 #------------------------------------------------------------------------------------------------------
       
+df_all['Fare'] = pd.qcut(df_all['Fare'], 5 )
+df_all['Age'] = pd.cut(df_all['Age'].astype(int), 5 )
+
+print("For age, each category has a different number of cases:")
+df_all['Age'].value_counts()
+      
+#------------------------------------------------------------------------------------------------------
