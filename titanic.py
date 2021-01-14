@@ -145,3 +145,8 @@ df_all.loc[df_all['Embarked'].isnull()]
      
 #------------------------------------------------------------------------------------------------------
       
+df_all.loc[(df_all['Pclass'] == 1) & (df_all['Fare'] <= 80) & (df_all ['Deck'] == 'ABC')]['Embarked'].value_counts()
+
+#Başlamak için sadece iki eksik var.
+#Ücret davası için zaten denediğimiz gibi, eksik değeri değiştirmek için benzer durumlara bakabiliriz.
+      
