@@ -95,12 +95,18 @@ df_all['Age']= df_all.groupby(['Pclass','Sex'])['Age'].apply(lambda x:x.fillna(x
 
       
 #----------------------------------------------------------------------------------------------
+
 #ücretlere bakıyoruz şimdi de      
-df_all.loc[df_all['Fare'].isnull()] 
+df_all.loc[df_all['Fare'].isnull()]   
+      
+#Tüm veri setinde tek bir eksik ücret değerimiz var. Bay Thomas
+      
+#----------------------------------------------------------------------------------------------      
       
 #loc cases which are similar to Mr.Thomas and use the median of fare to replace  the missing for his data set
       
 mr_thomas=df_all.loc[(df_all['Pclass']==3)&(df_all['SibSp']==0)&(df_all['Embarked']=='S')]['Fare'].median()
+print(mr_thomas)
       
 
 #------------------------------------------------------------------------------------------------------------
