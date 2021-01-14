@@ -177,6 +177,7 @@ df_all['Fare'].value_counts()
 
 df_all[['Age', 'Survived']].groupby('Age')['Survived'].mean()
 
+df_all[['Fare', 'Survived']].groupby('Fare')['Survived'].mean()      
 #------------------------------------------------------------------------------------------------------,
       
       
