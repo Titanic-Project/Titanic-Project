@@ -279,6 +279,23 @@ df_all.loc[df_all['Survival_quota'].isnull(), 'Survival_quota_NA']=0
 df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)                                                                            
                                                                             
                                                                             
+#Etiket ve Bir Sıcak Kodlama
+
+non_numeric_features = ['Embarked', 'Sex', 'Title', 'Age', 'Fare', 'Deck']
+                                                                            
+for feature in non_numeric_features:
+    df_all[feature] = LabelEncoder().fit_transform(df_all[feature])
+                                                                            
+cat_features = ['Pclass', 'Sex', 'Embarked', 'Title', 'Deck', 'Family_Size_bin', 'Age', 'Fare']
+                                                                            
+encoded_features = []
+                                                                            
+for feature in cat_features:
+    encoded_feat = OneHotEncoder().fit_transform(df_all[feature].values.reshape(-1,1)).toarray()
+    n = df_all[feature].nunique()
+                                                                                
+                                                                                
+                                                                            
                                                                             
                                                                             
       
