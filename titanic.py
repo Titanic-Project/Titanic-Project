@@ -4,16 +4,17 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn import preprocessing
 
 #---------------------------------------------------------------------------------------
 
 #Test ve Train Verisetini Tanımlama
 
 #Test verisetini pandas kütüphanesi ile tanımlıyoruz.
-train_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\train.csv')     #(r'C:\Users\Fatma\Downloads\titanic_data.csv')
+train_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\train.csv')     #(r'C:\Users\Fatma\Downloads\titanic_data.csv')
 
 #Eğitim verisetini pandas kütüphanesi ile tanımlıyoruz.
-test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')     #(r'C:\Users\Fatma\Downloads\test_data.csv')
+test_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\test.csv')     #(r'C:\Users\Fatma\Downloads\test_data.csv')
 
 #---------------------------------------------------------------------------------------
 
@@ -37,12 +38,12 @@ print(train_dataset.shape[0] + test_dataset.shape[0])
 
 #Hayatta kalma oranı
 train_dataset['Survived'].mean()
-test_dataset['Survived'].mean()
+#test_dataset['Survived'].mean()
 #---------------------------------------------------------------------------------------
 
 #Ilk 5 veriyi tablo şeklinde göster
 train_dataset.head()
-test_dataset.head()
+#test_dataset.head()
 #---------------------------------------------------------------------------------------
 
 #Eksik sütünları göster
@@ -51,7 +52,7 @@ test_dataset.head()
 print(train_dataset.columns[train_dataset.isna().any()])
 
 #test setinde eksik değerleri olan sütunları listele
-print(test_dataset.columns[test_dataset.isna().any()])
+#print(test_dataset.columns[test_dataset.isna().any()])
 
 #Eksiklik verileri şu şekilde de gösterebiliriz
 print("Missings in the train data: ")
@@ -79,11 +80,11 @@ df_all = concat_df(train_dataset , test_dataset)
 
 #yaş sütünumuzun yüzdelik olarak ne kadar eksik verisi olduğunu görmek için
 print("Missings for Age in the entire data set: " + str(df_all['Age'].isnull().sum()))
-print("Missings in percentage: " + str(round(df_all['Age'].isnull().sum()/len(df_all)*100,0))
+print("Missings in percentage: " + str(round(df_all['Age'].isnull().sum()/len(df_all)*100,0)))
 
 #yaş veri setimizin içinde değerlendirmeye devam ediyoruz
       
-print('Median for Age seperated by Pclass:')    
+print('Median for Age seperated by Pclass: ')    
 display(train_dataset.groupby('Pclass')['Age'].median())      
 print('Median for Age seperated by Pclass and Sex:')    
 display(train_dataset.groupby(['Pclass','Sex'])['Age'].median()) 
@@ -194,7 +195,7 @@ plt.suptitle('Survival rates for fare categories')
 df_all['Family_Size'] = df_all['SibSp'] + df_all['Parch'] + 1
 df_all['Family_Size'].hist(figsize=(15,7))
       
-df_all['Family_Size_bin']=df_all['Family_Size'].map(lambda s: 1 if s== 1 else (2 if s ==2 else(3 if <= s <= 4 else(4 if s >= 5 else 0)))))
+df_all['Family_Size_bin']=df_all['Family_Size'].map(lambda s: 1 if s == 1 else (2 if s == 2 else (3 if 3 <= s <= 4 else (4 if s >= 5 else 0))))
 
 df_all['Family_Size_bin'].value_counts()
 
@@ -202,7 +203,7 @@ df_all['Family_Size_bin'].value_counts()
 # Bununla birlikte, aileler çok büyükse, istisnai bir durumda koordinasyon muhtemelen çok zor olacaktır.
 
 df_all[['Family_Size_bin','Survived']].groupby('Family_Size_bin')['Survived'].mean().plot(kind='bar' , figsize=(15,7))
-pl.suptitle('Survival rates for family size categories')
+plt.suptitle('Survival rates for family size categories')
 
 #--------------------------------------------------------------------------------------------------------------------------
 #biletler
@@ -241,9 +242,9 @@ def extract_surname(data):
         title = name_no_bracket.split(',')[1].strip().split(' ')[0]
         for c in string.punctuation:
             family = family.replace(c, '').strip()
-         families.append(family)
+        families.append(family)
         
-       return families
+    return families
 df_all['Family'] = extract_surname(df_all['Name'])
 
 df_all['Family'].nunique()
@@ -259,7 +260,7 @@ df_all.loc[(df_all['Sex'] == 'female') & (df_all['Family_Size'] > 1)].groupby('F
 #Aile büyüklüğü 2 veya daha fazla olan kadınlarda, çoğu zaman hepsi veya hiçbiri ölmez.
 
 master_families = df_all.loc[df_all['Title'] == 'Master']['Family'].tolist()
-df_all.loc[df_all['Family'].isin(master_families)].groupby('Family')['Survived'].mean().hist(figsize(12,5))
+df_all.loc[df_all['Family'].isin(master_families)].groupby('Family')['Survived'].mean().hist(figsize=(12,5))
 
 #Aynısı, unvanında kaptan olan yolcu aileleri için de geçerlidir.
 
@@ -268,7 +269,7 @@ master_rate = df_all.loc[df_all['Family'].isin(master_families)].groupby('Family
 
 combined_rate = women_rate.append(master_rate)
 
-combined_rate_df = combined_rate.to_frame().reset_index().rename(columns = {'Survived ':'Survival_quota}).drop_duplicates(subset = 'Family')
+combined_rate_df = combined_rate.to_frame().reset_index().rename(columns={'Survived' : 'Survival_quota'}).drop_duplicates(subset='Family')
 
 df_all =pd.merge(df_all,combined_rate_df ,how = 'left')
                                                                             
@@ -282,6 +283,7 @@ df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)
 #Etiket ve Bir Sıcak Kodlama
 
 non_numeric_features = ['Embarked', 'Sex', 'Title', 'Age', 'Fare', 'Deck']
+                                                                            
                                                                             
 for feature in non_numeric_features:
     df_all[feature] = LabelEncoder().fit_transform(df_all[feature])
