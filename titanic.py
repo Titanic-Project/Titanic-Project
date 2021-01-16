@@ -38,12 +38,12 @@ print(train_dataset.shape[0] + test_dataset.shape[0])
 
 #Hayatta kalma oranı
 train_dataset['Survived'].mean()
-#test_dataset['Survived'].mean()
+
 #---------------------------------------------------------------------------------------
 
 #Ilk 5 veriyi tablo şeklinde göster
 train_dataset.head()
-#test_dataset.head()
+
 #---------------------------------------------------------------------------------------
 
 #Eksik sütünları göster
@@ -57,6 +57,7 @@ print(train_dataset.columns[train_dataset.isna().any()])
 #Eksiklik verileri şu şekilde de gösterebiliriz
 print("Missings in the train data: ")
 display(train_dataset.isnull().sum())
+
 print("Missings in the test data: ") 
 display(test_dataset.isnull().sum())
 
