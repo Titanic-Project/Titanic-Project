@@ -293,9 +293,35 @@ encoded_features = []
 for feature in cat_features:
     encoded_feat = OneHotEncoder().fit_transform(df_all[feature].values.reshape(-1,1)).toarray()
     n = df_all[feature].nunique()
+    cols = ['{}_{}.format(feature,n) for n in range(1, n+1)] 
+    encoded_df = pd.DataFrame(encoded_feat, columns= cols)
+    encoded_features.append(encoded_df)        
+                                                                            
+df_all  = pd.concat([df_all, encoded_features], axis=1)     
+            
+train_dataset, test_dataset = divide_df(df_all)            
                                                                                 
                                                                                 
                                                                             
-                                                                            
-                                                                            
+#Modelleme ve tahmin
+            
+            
+drop_cols = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Age','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin'] 
+            
+drop_cols_2 = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Fare','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin']            
       
+X = StandardScaler().fit_transform(train_dataset.drop(columns=drop_cols))
+y = train_dataset['Survived'].values
+            
+X_test = StandardScaler().fit_transform(test_dataset.drop(columns=drop_cols2))       
+X_train, X_test,y_train,y_test = train_test_split(X,y, test_size = 0.25, random_state =42) 
+model = RandomForestClassifier(criterion = 'gini',n_estimators=1750,max_depth=7,min_samples_split =6, min_samples_leaf = 6, max_features = 'auto', oob_score= True, random_state=42, n_jobs=-1,verbose =1)
+            
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)  
+print(model.score(X_test, y_test)) 
+output = pd.DataFrame({'PassengerId': test_data.PassengerId, 'Survived':predictions})
+output['Survived'] = output['Survived'].astype(int) 
+output.to_cs('2020_04_09_bd_final_v3.csv', index= False)            
+            
+            
