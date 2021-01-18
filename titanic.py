@@ -114,21 +114,21 @@ print (confusion_matrix)
 #---------------------------------------------------------------------------------------
 #Modelleme ve tahmin
                      
-drop_cols = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Age','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin'] 
+X = egitim.values
+y = egitim['Survived'].values
+
+X = np.delete(X,1,axis=1)
             
-drop_cols_2 = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Fare','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin']            
-      
-X = StandardScaler().fit_transform(train_dataset.drop(columns=drop_cols))
-y = train_dataset['Survived'].values
-            
-X_test = StandardScaler().fit_transform(test_dataset.drop(columns=drop_cols2))       
+#X_test = StandardScaler().fit_transform(test_dataset)       
 X_train, X_test,y_train,y_test = train_test_split(X,y, test_size = 0.25, random_state =42) 
 model = RandomForestClassifier(criterion = 'gini',n_estimators=1750,max_depth=7,min_samples_split =6, min_samples_leaf = 6, max_features = 'auto', oob_score= True, random_state=42, n_jobs=-1,verbose =1)
             
 model.fit(X_train, y_train)
 predictions = model.predict(X_test)  
-print(model.score(X_test, y_test)) 
 
+başarı = model.score(X_test, y_test)
+
+print(başarı)
 
 
 
@@ -368,28 +368,6 @@ df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)
                                                                                   
                                                                                                                                                        
 #----------------------------------------------------------------
-                                                                            
-#Modelleme ve tahmin
-                     
-drop_cols = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Age','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin'] 
-            
-drop_cols_2 = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Fare','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin']            
-      
-X = StandardScaler().fit_transform(train_dataset.drop(columns=drop_cols))
-y = train_dataset['Survived'].values
-            
-X_test = StandardScaler().fit_transform(test_dataset.drop(columns=drop_cols2))       
-X_train, X_test,y_train,y_test = train_test_split(X,y, test_size = 0.25, random_state =42) 
-model = RandomForestClassifier(criterion = 'gini',n_estimators=1750,max_depth=7,min_samples_split =6, min_samples_leaf = 6, max_features = 'auto', oob_score= True, random_state=42, n_jobs=-1,verbose =1)
-            
-model.fit(X_train, y_train)
-predictions = model.predict(X_test)  
-print(model.score(X_test, y_test)) 
-
-
-
-output = pd.DataFrame({'PassengerId': test_data.PassengerId, 'Survived':predictions})
-output['Survived'] = output['Survived'].astype(int) 
-output.to_cs('2020_04_09_bd_final_v3.csv', index= False)            
+                                                                                     
             
             
