@@ -1,5 +1,71 @@
 #Imports
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split 
+import csv
+ 
 
+egitim = open(r"C:\\Users\\Fatma\\Desktop\\train.csv")      #for Gizem (r'C:\Users\Gizem\Downloads\train.csv') 
+
+egitim = pd.read_csv(egitim)  
+
+egitim.info()
+
+#print(egitim)
+cikarilacaklar = ['Name','Ticket','Cabin'] #datamızı incelediğimizde bazı sütünlerin bizim verimiz için gerekli olmadığını fark edip çıkartık.
+egitim = egitim.drop(cikarilacaklar,axis=1)
+
+egitim = egitim.dropna() #bazı eksik verileri temizledik.
+
+egitim.info()
+
+yolcular = []
+sutunlar = ['Pclass','Sex','Embarked']  #Pclass:yolcu sınıfı,Embarked:biniş noktası
+for sutun in sutunlar:
+    yolcular.append(pd.get_dummies(egitim[sutun])) #kategorik verileri yer tutucu ile değiştirmek için get_dummies kullandık.
+
+yolcular = pd.concat(yolcular, axis=1) #Dataframe elde etmek için concat methodu kullandık.
+print(yolcular)
+
+yolcular = yolcular.drop(['female'], axis=1)
+egitim = pd.concat((egitim,yolcular),axis=1)
+egitim = egitim.drop(['Pclass','Sex','Embarked'],axis=1)
+
+print(egitim)
+
+X = egitim.values
+Y = egitim['Survived'].values
+
+X = np.delete(X,1,axis=1)
+
+X_train, X_test, y_train, y_test=train_test_split(X,Y,test_size=0.3, random_state=0) #test size 30 atadık train test de 70 oldu
+
+from sklearn import tree
+siniflama = tree.DecisionTreeClassifier(max_depth=5)
+siniflama.fit(X_train,y_train)
+skor = siniflama.score(X_test,y_test)
+
+print("Başarı: ",skor)
+
+from sklearn.metrics import accuracy_score
+tahminler = siniflama.predict(X)
+as_egitim = accuracy_score(tahminler, Y)
+
+print("Doğruluk tablosu skoru: ", as_egitim)
+#Yukarıda uygulamanın doğruluk skorunu elde ettik ancak, doğruluk skoru tek başına bir başarı ölçme kriteri olamaz.
+#Diğer kriterlere (hata oranı, hassasiyet vb.) bakabilmek için confusion matrix kullandık. 
+#Bunun için pandas kütüphanesinden crosstab() metodu kullandık.
+
+confusion_matrix = pd.crosstab(Y, tahminler, rownames=['Gerçek'], colnames=['Tahmin'])
+print (confusion_matrix)
+
+
+
+
+
+#-----------------------------------KENDİMİZ BİR SORU ÜRETİP İŞLEMEYE ÇALIŞTIK-----------------------------------------
+#-----------------------------------BÜTÜN SÜTUNLARLA DAHİL ETTİK VE VERİLERİ SİLMEYİP TAMAMLADIK ----------------------
+#-----------------------------------CLASSFICATION İÇİN FARKLI KÜTÜPHANELER KULLANDIK------------------------------------
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,10 +77,10 @@ from sklearn import preprocessing
 #Test ve Train Verisetini Tanımlama
 
 #Test verisetini pandas kütüphanesi ile tanımlıyoruz.
-train_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\train.csv')     #(r'C:\Users\Fatma\Downloads\titanic_data.csv')
+train_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\train.csv')     #(r'C:\Users\Gizem\Downloads\titanic_data.csv')
 
 #Eğitim verisetini pandas kütüphanesi ile tanımlıyoruz.
-test_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\test.csv')     #(r'C:\Users\Fatma\Downloads\test_data.csv')
+test_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\test.csv')     #(r'C:\Users\Gizem\Downloads\test_data.csv')
 
 #---------------------------------------------------------------------------------------
 
