@@ -1,8 +1,12 @@
 #Imports
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split 
 import csv
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split 
+
  
 
 egitim = open(r"C:\\Users\\Fatma\\Desktop\\train.csv")      #for Gizem (r'C:\Users\Gizem\Downloads\train.csv') 
@@ -66,13 +70,7 @@ print (confusion_matrix)
 #-----------------------------------KENDİMİZ BİR SORU ÜRETİP İŞLEMEYE ÇALIŞTIK-----------------------------------------
 #-----------------------------------BÜTÜN SÜTUNLARLA DAHİL ETTİK VE VERİLERİ SİLMEYİP TAMAMLADIK ----------------------
 #-----------------------------------CLASSFICATION İÇİN FARKLI KÜTÜPHANELER KULLANDIK------------------------------------
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn import preprocessing
 
-#---------------------------------------------------------------------------------------
 
 #Test ve Train Verisetini Tanımlama
 
