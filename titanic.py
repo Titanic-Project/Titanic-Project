@@ -4,95 +4,36 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split 
-
- 
-
-egitim = open(r"C:\\Users\\Fatma\\Desktop\\train.csv")      #for Gizem (r'C:\Users\Gizem\Downloads\train.csv') 
-
-egitim = pd.read_csv(egitim)  
-
-egitim.info()
-
-#print(egitim)
-cikarilacaklar = ['Name','Ticket','Cabin'] #datamızı incelediğimizde bazı sütünlerin bizim verimiz için gerekli olmadığını fark edip çıkartık.
-egitim = egitim.drop(cikarilacaklar,axis=1)
-
-egitim = egitim.dropna() #bazı eksik verileri temizledik.
-
-egitim.info()
-
-yolcular = []
-sutunlar = ['Pclass','Sex','Embarked']  #Pclass:yolcu sınıfı,Embarked:biniş noktası
-for sutun in sutunlar:
-    yolcular.append(pd.get_dummies(egitim[sutun])) #kategorik verileri yer tutucu ile değiştirmek için get_dummies kullandık.
-
-yolcular = pd.concat(yolcular, axis=1) #Dataframe elde etmek için concat methodu kullandık.
-print(yolcular)
-
-yolcular = yolcular.drop(['female'], axis=1)
-egitim = pd.concat((egitim,yolcular),axis=1)
-egitim = egitim.drop(['Pclass','Sex','Embarked'],axis=1)
-
-print(egitim)
-
-X = egitim.values
-Y = egitim['Survived'].values
-
-X = np.delete(X,1,axis=1)
-
-X_train, X_test, y_train, y_test=train_test_split(X,Y,test_size=0.3, random_state=0) #test size 30 atadık train test de 70 oldu
 
 from sklearn import tree
-siniflama = tree.DecisionTreeClassifier(max_depth=5)
-siniflama.fit(X_train,y_train)
-skor = siniflama.score(X_test,y_test)
-
-print("Başarı: ",skor)
-
+from sklearn import preprocessing
 from sklearn.metrics import accuracy_score
-tahminler = siniflama.predict(X)
-as_egitim = accuracy_score(tahminler, Y)
+from sklearn.model_selection import train_test_split 
 
-print("Doğruluk tablosu skoru: ", as_egitim)
-#Yukarıda uygulamanın doğruluk skorunu elde ettik ancak, doğruluk skoru tek başına bir başarı ölçme kriteri olamaz.
-#Diğer kriterlere (hata oranı, hassasiyet vb.) bakabilmek için confusion matrix kullandık. 
-#Bunun için pandas kütüphanesinden crosstab() metodu kullandık.
-
-confusion_matrix = pd.crosstab(Y, tahminler, rownames=['Gerçek'], colnames=['Tahmin'])
-print (confusion_matrix)
-
-
-
-
-
-#-----------------------------------KENDİMİZ BİR SORU ÜRETİP İŞLEMEYE ÇALIŞTIK-----------------------------------------
-#-----------------------------------BÜTÜN SÜTUNLARLA DAHİL ETTİK VE VERİLERİ SİLMEYİP TAMAMLADIK ----------------------
-#-----------------------------------CLASSFICATION İÇİN FARKLI KÜTÜPHANELER KULLANDIK------------------------------------
-
-
+#---------------------------------------------------------------------------------------
 #Test ve Train Verisetini Tanımlama
+
+egitim = open(r"C:\\Users\\Fatma\\Desktop\\train.csv")      
+egitim = pd.read_csv(egitim)  
 
 #Test verisetini pandas kütüphanesi ile tanımlıyoruz.
 train_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\train.csv')     #(r'C:\Users\Gizem\Downloads\titanic_data.csv')
 
 #Eğitim verisetini pandas kütüphanesi ile tanımlıyoruz.
 test_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\test.csv')     #(r'C:\Users\Gizem\Downloads\test_data.csv')
-
 #---------------------------------------------------------------------------------------
+egitim.info()
 
 train_dataset.info()
 test_dataset.info()
 #---------------------------------------------------------------------------------------
-
 #Sütunları kontrol ediyoruz.
+
 print(train_dataset.columns )
 print(test_dataset.columns)
 
 #Sütun ve Satırları Train ve Test için yazdır
 print('\ntrain dataset: %s, test dataset %s' %(str(train_dataset.shape), str(test_dataset.shape)) )
-
 #---------------------------------------------------------------------------------------
 
 #İki veri setindeki toplam yolcu sayısı
@@ -115,15 +56,95 @@ train_dataset.head()
 #eğitim setinde eksik değerleri olan sütunları listele
 print(train_dataset.columns[train_dataset.isna().any()])
 
-#test setinde eksik değerleri olan sütunları listele
-#print(test_dataset.columns[test_dataset.isna().any()])
-
 #Eksiklik verileri şu şekilde de gösterebiliriz
 print("Missings in the train data: ")
 display(train_dataset.isnull().sum())
 
 print("Missings in the test data: ") 
 display(test_dataset.isnull().sum())
+
+#---------------------------------------------------------------------------------------
+
+cikarilacaklar = ['Name','Ticket','Cabin'] #datamızı incelediğimizde bazı sütünlerin bizim verimiz için gerekli olmadığını fark edip çıkartık.
+egitim = egitim.drop(cikarilacaklar,axis=1)
+
+egitim = egitim.dropna() #bazı eksik verileri temizledik.
+
+egitim.info()
+
+yolcular = []
+sutunlar = ['Pclass','Sex','Embarked']  #Pclass:yolcu sınıfı,Embarked:biniş noktası
+for sutun in sutunlar:
+    yolcular.append(pd.get_dummies(egitim[sutun])) #kategorik verileri yer tutucu ile değiştirmek için get_dummies kullandık.
+
+yolcular = pd.concat(yolcular, axis=1) #Dataframe elde etmek için concat methodu kullandık.
+print(yolcular)
+
+yolcular = yolcular.drop(['female'], axis=1)
+egitim = pd.concat((egitim,yolcular),axis=1)
+egitim = egitim.drop(['Pclass','Sex','Embarked'],axis=1)
+
+print(egitim)
+
+#---------------------------------------------------------------------------------------
+X = egitim.values
+Y = egitim['Survived'].values
+
+X = np.delete(X,1,axis=1)
+
+X_train, X_test, y_train, y_test=train_test_split(X,Y,test_size=0.3, random_state=0) #test size 30 atadık train test de 70 oldu
+
+siniflama = tree.DecisionTreeClassifier(max_depth=5)
+siniflama.fit(X_train,y_train)
+skor = siniflama.score(X_test,y_test)
+
+print("Başarı: ",skor)
+
+tahminler = siniflama.predict(X)
+as_egitim = accuracy_score(tahminler, Y)
+
+print("Doğruluk tablosu skoru: ", as_egitim)
+#Yukarıda uygulamanın doğruluk skorunu elde ettik ancak, doğruluk skoru tek başına bir başarı ölçme kriteri olamaz.
+#Diğer kriterlere (hata oranı, hassasiyet vb.) bakabilmek için confusion matrix kullandık. 
+#Bunun için pandas kütüphanesinden crosstab() metodu kullandık.
+
+confusion_matrix = pd.crosstab(Y, tahminler, rownames=['Gerçek'], colnames=['Tahmin'])
+print (confusion_matrix)
+
+#---------------------------------------------------------------------------------------
+#Modelleme ve tahmin
+                     
+drop_cols = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Age','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin'] 
+            
+drop_cols_2 = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Fare','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin']            
+      
+X = StandardScaler().fit_transform(train_dataset.drop(columns=drop_cols))
+y = train_dataset['Survived'].values
+            
+X_test = StandardScaler().fit_transform(test_dataset.drop(columns=drop_cols2))       
+X_train, X_test,y_train,y_test = train_test_split(X,y, test_size = 0.25, random_state =42) 
+model = RandomForestClassifier(criterion = 'gini',n_estimators=1750,max_depth=7,min_samples_split =6, min_samples_leaf = 6, max_features = 'auto', oob_score= True, random_state=42, n_jobs=-1,verbose =1)
+            
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)  
+print(model.score(X_test, y_test)) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+#-----------------------------------KENDİMİZ BİR SORU ÜRETİP İŞLEMEYE ÇALIŞTIK-----------------------------------------
+#-----------------------------------BÜTÜN SÜTUNLARLA DAHİL ETTİK VE VERİLERİ SİLMEYİP TAMAMLADIK ----------------------
+#-----------------------------------CLASSFICATION İÇİN FARKLI KÜTÜPHANELER KULLANDIK------------------------------------
+
 
 #---------------------------------------------------------------------------------------
 
@@ -344,35 +365,12 @@ df_all['Survival_quota_NA'] = 1
 df_all.loc[df_all['Survival_quota'].isnull(), 'Survival_quota_NA']=0                                                                            
 df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)                                                                            
                                                                             
-                                                                            
-#Etiket ve Bir Sıcak Kodlama
-
-non_numeric_features = ['Embarked', 'Sex', 'Title', 'Age', 'Fare', 'Deck']
-                                                                            
-                                                                            
-for feature in non_numeric_features:
-    df_all[feature] = LabelEncoder().fit_transform(df_all[feature])
-                                                                            
-cat_features = ['Pclass', 'Sex', 'Embarked', 'Title', 'Deck', 'Family_Size_bin', 'Age', 'Fare']
-                                                                            
-encoded_features = []
-                                                                            
-for feature in cat_features:
-    encoded_feat = OneHotEncoder().fit_transform(df_all[feature].values.reshape(-1,1)).toarray()
-    n = df_all[feature].nunique()
-    cols = ['{}_{}.format(feature,n) for n in range(1, n+1)] 
-    encoded_df = pd.DataFrame(encoded_feat, columns= cols)
-    encoded_features.append(encoded_df)        
-                                                                            
-df_all  = pd.concat([df_all, encoded_features], axis=1)     
-            
-train_dataset, test_dataset = divide_df(df_all)            
-                                                                                
-                                                                                
+                                                                                  
+                                                                                                                                                       
+#----------------------------------------------------------------
                                                                             
 #Modelleme ve tahmin
-            
-            
+                     
 drop_cols = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Age','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin'] 
             
 drop_cols_2 = ['Emabarked', 'Family','Family_Size','Survived','Family_Size_bin','Deck','Fare','Name','Parch','PassengerId','Pclass','Sex','SibSp','Title','Ticket','Cabin']            
@@ -387,6 +385,9 @@ model = RandomForestClassifier(criterion = 'gini',n_estimators=1750,max_depth=7,
 model.fit(X_train, y_train)
 predictions = model.predict(X_test)  
 print(model.score(X_test, y_test)) 
+
+
+
 output = pd.DataFrame({'PassengerId': test_data.PassengerId, 'Survived':predictions})
 output['Survived'] = output['Survived'].astype(int) 
 output.to_cs('2020_04_09_bd_final_v3.csv', index= False)            
