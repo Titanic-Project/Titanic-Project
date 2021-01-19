@@ -27,10 +27,10 @@ from sklearn.linear_model import LogisticRegression
 # Test and Train Datasets
 
 # We define the train dataset with pandas library.
-train_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\train.csv') 
+train_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\train.csv')   #for Fatma (r'C:\Users\Fatma\Desktop\new\train.csv')
 
 # We define the test dataset with pandas library.
-test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')
+test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')   # for Fatma (r'C:\Users\Fatma\Desktop\new\test.csv')
 
 
 train_dataset.info()
