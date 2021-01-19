@@ -304,9 +304,9 @@ plt.suptitle('Survival rates for fare categories')
   
 #5-Sibs and Parch
 
-#Veri setimizde bize aile büyüklüğü hakkında bir şeyler söyleyen iki ilginç değişken var. 
-#SibSp, bir yolcunun kaç tane kardeşi ve eşi olduğunu tanımlar ve kaç tane ebeveyn ve çocuk parch. 
-#Bu değişkenleri özetleyebilir ve aile boyutunu elde etmek için 1 ekleyebiliriz (her yoldan geçen için).     
+#There are two interesting variables in our dataset that tell us something about family size.
+#SibSp defines how many siblings and spouses a passenger has and how many parents and children parch.
+# We can sum these variables and add 1 to get the family size (for each passerby).     
       
 df_all['Family_Size'] = df_all['SibSp'] + df_all['Parch'] + 1
 df_all['Family_Size'].hist(figsize=(15,7))
@@ -315,8 +315,8 @@ df_all['Family_Size_bin']=df_all['Family_Size'].map(lambda s: 1 if s == 1 else (
 
 df_all['Family_Size_bin'].value_counts()
 
-#Bir tez, ailelerin hayatta kalma şansının bekarlara göre daha yüksek olduğu, çünkü kendilerini daha iyi destekleyebildikleri ve öncelikli olarak kurtarıldıklarıdır.
-# Bununla birlikte, aileler çok büyükse, istisnai bir durumda koordinasyon muhtemelen çok zor olacaktır.
+#One thesis is that families have a higher chance of survival than singles because they are better able to support themselves and are primarily rescued.
+# However, if families are very large, coordination will probably be very difficult in an exceptional situation.
 
 df_all[['Family_Size_bin','Survived']].groupby('Family_Size_bin')['Survived'].mean().plot(kind='bar' , figsize=(15,7))
 plt.suptitle('Survival rates for family size categories')
@@ -324,7 +324,7 @@ plt.suptitle('Survival rates for family size categories')
 #6-Tickets
 df_all['Ticket_Frequency'] = df_all.groupby('Ticket')['Ticket'].transform('count')
 
-#Bilet sıklıkları ile hayatta kalma oranları arasında bir korelasyon bekliyoruz, çünkü aynı bilet numaraları, insanların birlikte seyahat ettiklerinin bir göstergesi.
+#We expect a correlation between ticket frequencies and survival rates because the same ticket numbers are an indication that people travel together.
 df_all[['Ticket_Frequency','Survived']].groupby('Ticket_Frequency').mean()
 
 #7-Title
