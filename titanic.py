@@ -199,7 +199,7 @@ display(train_dataset.isnull().sum())
 print("Missings in the test data: ") 
 display(test_dataset.isnull().sum())
 
-#train ve test data setini pandas kütüphanesinin concat metoduyla birleştiren fonksyon
+#Combining train and test data set with pandas library's concat method
 
 def concat_df(train_dataset,test_dataset):
     return pd.concat([train_dataset, test_dataset], sort= True).reset_index(drop=True)
@@ -217,7 +217,7 @@ df_all = concat_df(train_dataset , test_dataset)
 print("Missings for Age in the entire data set: " + str(df_all['Age'].isnull().sum()))
 print("Missings in percentage: " + str(round(df_all['Age'].isnull().sum()/len(df_all)*100,0)))
 
-#yaş veri setimizin içinde değerlendirmeye devam ediyoruz
+# We continue to evaluate it in our age data set
       
 print('Median for Age seperated by Pclass: ')    
 display(train_dataset.groupby('Pclass')['Age'].median())      
@@ -234,7 +234,7 @@ df_all['Age']= df_all.groupby(['Pclass','Sex'])['Age'].apply(lambda x:x.fillna(x
 
 df_all.loc[df_all['Fare'].isnull()]   
       
-#Tüm veri setinde tek bir eksik ücret değerimiz var. Bay Thomas      
+# We have one missing charge value across the entire data set. Mr. Thomas    
       
 #loc cases which are similar to Mr.Thomas and use the median of fare to replace  the missing for his data set
       
@@ -253,8 +253,8 @@ df_all['Deck'] = df_all['Cabin'].apply(lambda s: s[0] if pd.notnull(s) else 'M' 
 df_all[['Deck','Survived']].groupby('Deck')['Survived'].mean().plot(kind='bar',figsize=(15,7))
 plt.suptitle('Survival rates for diffrent cabins')
             
-#Hayatta kalma oranlarında önemli farklılıklar var çünkü üst güvertelerdeki konuklar filikalarda daha hızlıydı.
-#Bazı desteleri gruplayacağız.      
+# There are significant differences in survival rates because guests on the upper decks were faster on the lifeboats.
+# We will group some decks.      
       
       
 idx=df_all[df_all['Deck'] == 'T'].index
@@ -271,8 +271,8 @@ df_all.loc[df_all['Embarked'].isnull()]
            
 df_all.loc[(df_all['Pclass'] == 1) & (df_all['Fare'] <= 80) & (df_all ['Deck'] == 'ABC')]['Embarked'].value_counts()
 
-#Başlamak için sadece iki eksik var.
-#Ücret davası için zaten denediğimiz gibi, eksik değeri değiştirmek için benzer durumlara bakabiliriz.
+# There are only two missing to start.
+#As we have already tried for the fee case, we can look at similar situations to replace the missing value.
       
 df_all.loc[df_all['Embarked'].isnull(),'Embarked'] = 'S'
            
