@@ -19,14 +19,13 @@ train_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\train.csv')
 #Eğitim verisetini pandas kütüphanesi ile tanımlıyoruz.
 test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')
 
-
-
 train_dataset.info()
 test_dataset.info()
 
 train_dataset.describe()
 
 #Sütunları kontrol ediyoruz.
+
 print(train_dataset.columns )
 print(test_dataset.columns)
 
@@ -42,6 +41,128 @@ train_dataset['Survived'].mean()
 #Ilk 5 veriyi tablo şeklinde göster
 train_dataset.head()
 
+male_passenger = train_dataset[train_dataset['Sex']== 'male']
+female_passenger = train_dataset[train_dataset['Sex']== 'female']
+
+#Kid passengers' dataframe. I accepted under of 16 years old as kid.
+kid_passenger = train_dataset[train_dataset['Age'] < 16]
+male_kid_passenger = kid_passenger[kid_passenger['Sex'] == 'male']
+female_kid_passenger = kid_passenger[kid_passenger['Sex'] == 'female']
+
+#Creating adult male and female dataframes by dropping kid passengers
+adult_male_passenger = male_passenger.drop(male_kid_passenger.index[:])
+adult_female_passenger = female_passenger.drop(female_kid_passenger.index[:])
+
+#Number of passengers according to sex and age
+print ('Number of all passengers:', len(train_dataset))
+print ('Number of male passengers:', len(male_passenger))
+print ('Number of female passengers:', len(female_passenger))
+print ('Number of adult male passengers:', len(adult_male_passenger))
+print ('Number of adult female passengers:', len(adult_female_passenger))
+print ('Number of kid passengers:', len(kid_passenger))
+
+#Visualization of Sex
+
+#Visualization of percentages of passengers by sex on pie chart
+x = [len(male_passenger), len(female_passenger)]
+label = ['Male', 'Female']
+plt.pie(x, labels = label, autopct = '%1.01f%%')
+plt.title('Distribution of passengers by sex')
+plt.show()
+
+#Visualization of Age
+
+#We can also diversify age groups by defining a function:
+def age_distribution(x):
+    if x>=0 and x <16:
+        return 'Child'
+    elif x>=16 and x<=24:
+        return 'Young'
+    else:
+        return 'Adult'
+    
+train_dataset['Age'].apply(age_distribution).value_counts()
+
+#Visualization of percentages of passengers by age
+train_dataset['Age'].apply(age_distribution).value_counts().plot(kind='pie', autopct='%1.0f%%')
+plt.title('Distribution of passengers by age')
+plt.show()
+
+print ('Average age of adult male passengers:', adult_male_passenger['Age'].mean())
+print ('Average age of adult female passengers:', adult_female_passenger['Age'].mean())
+print ('Average age of kid passengers:', kid_passenger['Age'].mean())
+
+#Pclass
+
+#Number of passengers according to class
+#Pclass: A proxy for socio-economic status 1st = Upper 2nd = Middle, 3rd = Lower)
+train_dataset['Pclass'].value_counts()
+
+#Embarked
+
+#Filling the two missing values in 'Embarked' with the most occurred value, which is "S"
+train_dataset['Embarked'] = train_dataset['Embarked'].fillna('S')
+#Visualization of number of passengers by embarking ports 
+train_dataset['Embarked'].value_counts().plot(kind='bar')
+plt.title('Embarking ports')
+plt.ylabel('Frequency')
+plt.xlabel('S=Southampton, C=Cherbourg, Q=Queenstown')
+plt.show()
+
+#ANALYZING OF SURVIVINGS
+#Number of surviveds and not-surviveds
+train_dataset['Survived'].value_counts()
+train_dataset['Survived'].value_counts().plot(kind='bar', title='Surviving')
+plt.xlabel('0= Not-survived  1= Survived')
+plt.ylabel('Frequency')
+plt.show()
+
+#Number of survivings by sex
+train_dataset.groupby('Sex')['Survived'].value_counts()
+
+#Visualization of survivings by sex
+train_dataset.groupby('Sex')['Survived'].value_counts().plot(kind='bar', stacked=True, colormap='winter')
+plt.show()
+
+#Better visualization of survivings by sex
+sex_survived = train_dataset.groupby(['Sex', 'Survived'])
+sex_survived.size().unstack().plot(kind='bar', stacked=True, colormap='winter')
+plt.ylabel('Frequency')
+plt.title('Survivings by sex')
+plt.show()
+
+#Usage of size(),unstack() while examining survivings by passenger class
+class_survived = train_dataset.groupby(['Pclass', 'Survived'])
+#size() - to count number of rows in each grouping
+class_survived.size()
+
+#unstack() - to convert results into a more readable format.
+class_survived.size().unstack()
+
+#Visualization of survivings by passenger class
+class_survived.size().unstack().plot(kind='bar', stacked=True, colormap='autumn')
+plt.xlabel('1st = Upper,   2nd = Middle,   3rd = Lower')
+plt.ylabel('Frequency')
+plt.title('Survivings by passenger class')
+plt.show()
+
+#Numbers of survived/not survived passengers by sex and passenger class
+print ('Surviving numbers of male passengers by passenger class: ',
+male_passenger.groupby(['Pclass', 'Survived']).size().unstack())
+
+print ('Surviving numbers of female passengers by passenger class:',
+female_passenger.groupby(['Pclass', 'Survived']).size().unstack())
+
+#Visualization of male and female survivings by passenger class
+fig, axes = plt.subplots(nrows=2, ncols=1)
+male_passenger.groupby(['Pclass','Survived']).size().unstack().plot(kind='bar', title='Surviving of male passengers by class',
+                                                                    stacked=True, colormap='summer', ax=axes[0])
+female_passenger.groupby(['Pclass','Survived']).size().unstack().plot(kind='bar', title='Surviving of female passengers by class',
+                                                                      stacked=True, colormap='summer', ax=axes[1])
+plt.tight_layout()
+plt.show()
+
+
 #Eksik sütünları göster
 
 #eğitim setinde eksik değerleri olan sütunları listele
@@ -55,8 +176,10 @@ print("Missings in the test data: ")
 display(test_dataset.isnull().sum())
 
 #train ve test data setini pandas kütüphanesinin concat metoduyla birleştiren fonksyon
+
 def concat_df(train_dataset,test_dataset):
     return pd.concat([train_dataset, test_dataset], sort= True).reset_index(drop=True)
+
 
 #Eğitim verilerinde yaş, kabin ve başlangıçlar sütununda eksiklerimiz var.
 #Test veri setinde yaş, ücret ve kabin sütununda eksiklikler var. 
@@ -83,7 +206,8 @@ display(train_dataset.groupby(['Pclass','Sex'])['Age'].count())
 #replace the missings values with the medians of each group
 df_all['Age']= df_all.groupby(['Pclass','Sex'])['Age'].apply(lambda x:x.fillna(x.median()))
 
-#ücretlere bakıyoruz şimdi de      
+#Ücret  
+
 df_all.loc[df_all['Fare'].isnull()]   
       
 #Tüm veri setinde tek bir eksik ücret değerimiz var. Bay Thomas      
@@ -92,8 +216,9 @@ df_all.loc[df_all['Fare'].isnull()]
       
 mr_thomas=df_all.loc[(df_all['Pclass']==3)&(df_all['SibSp']==0)&(df_all['Embarked']=='S')]['Fare'].median()
 print(mr_thomas)
+     
 
-#kabine bakıyoruz belki de önemli bir belirleyici olabilir.
+#Kabin
       
 display(train_dataset['Cabin'].unique())
 print("There are "+ str(train_dataset['Cabin'].nunique()) + " different values for Cabin and " + str(train_dataset['Cabin'].isnull().sum()) + " cases are missing.")
@@ -103,9 +228,7 @@ df_all['Deck'] = df_all['Cabin'].apply(lambda s: s[0] if pd.notnull(s) else 'M' 
       
 df_all[['Deck','Survived']].groupby('Deck')['Survived'].mean().plot(kind='bar',figsize=(15,7))
 plt.suptitle('Survival rates for diffrent cabins')
-      
-   
-      
+            
 #Hayatta kalma oranlarında önemli farklılıklar var çünkü üst güvertelerdeki konuklar filikalarda daha hızlıydı.
 #Bazı desteleri gruplayacağız.      
       
@@ -117,22 +240,17 @@ df_all['Deck']= df_all['Deck'].replace(['D','E'],'DE')
 df_all['Deck']= df_all['Deck'].replace(['F','G'],'FG')      
 df_all['Deck'].value_counts()
 
-
-# In[15]:
-
-
 #gemiye bindiler
       
 df_all.loc[df_all['Embarked'].isnull()]
-     
-
+           
 df_all.loc[(df_all['Pclass'] == 1) & (df_all['Fare'] <= 80) & (df_all ['Deck'] == 'ABC')]['Embarked'].value_counts()
 
 #Başlamak için sadece iki eksik var.
 #Ücret davası için zaten denediğimiz gibi, eksik değeri değiştirmek için benzer durumlara bakabiliriz.
       
 df_all.loc[df_all['Embarked'].isnull(),'Embarked'] = 'S'
-      
+           
 print("Missing in the data:")
 display(df_all.isnull().sum())
 
@@ -158,7 +276,7 @@ plt.suptitle('Survival rates for age categories')
  
 df_all[['Fare', 'Survived']].groupby('Fare')['Survived'].mean().plot(kind='bar', figsize=(15,7))
 plt.suptitle('Survival rates for fare categories')         
-
+  
 #AİLE
 
 #Veri setimizde bize aile büyüklüğü hakkında bir şeyler söyleyen iki ilginç değişken var. 
@@ -184,6 +302,7 @@ df_all['Ticket_Frequency'] = df_all.groupby('Ticket')['Ticket'].transform('count
 #Bilet sıklıkları ile hayatta kalma oranları arasında bir korelasyon bekliyoruz, çünkü aynı bilet numaraları, insanların birlikte seyahat ettiklerinin bir göstergesi.
 df_all[['Ticket_Frequency','Survived']].groupby('Ticket_Frequency').mean()
 
+
 #İSİM
 
 #İsim bize bir yolcunun sosyoekonomik durumu hakkında çok önemli bilgiler veriyor. 
@@ -198,7 +317,7 @@ df_all['Title'].nunique()
 title_names = (df_all['Title'].value_counts() < 10)
 df_all['Title'] = df_all['Title'].apply(lambda x: 'Misc' if title_names.loc[x] == True else x)
 df_all.groupby('Title')['Title'].count()
-
+                
 #Yolcuların soyadlarını belirleyeceğiz. 
 #Daha sonra hem eğitimde hem de test veri setinde bulunan herhangi bir aile üyesi olup olmadığını görebiliriz.
 import string
@@ -250,7 +369,7 @@ df_all =pd.merge(df_all,combined_rate_df ,how = 'left')
                                                                             
 df_all['Survival_quota_NA'] = 1
 df_all.loc[df_all['Survival_quota'].isnull(), 'Survival_quota_NA']=0                                                                            
-df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)                   
+df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)   
 
 cikarilacaklar = ['Name','Ticket','Cabin'] #datamızı incelediğimizde bazı sütünlerin bizim verimiz için gerekli olmadığını fark edip çıkartık.
 train_dataset = train_dataset.drop(cikarilacaklar,axis=1)
@@ -314,6 +433,8 @@ predictions = model.predict(X_test)
 başarı = model.score(X_test, y_test)
 
 print(başarı)
+
+
 
 
 
