@@ -17,13 +17,11 @@ egitim = open(r"C:\\Users\\Fatma\\Desktop\\train.csv")
 egitim = pd.read_csv(egitim)  
 
 #Test verisetini pandas kütüphanesi ile tanımlıyoruz.
-train_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\train.csv')     #(r'C:\Users\Gizem\Downloads\titanic_data.csv')
+train_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\train.csv')    
 
 #Eğitim verisetini pandas kütüphanesi ile tanımlıyoruz.
-test_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\test.csv')     #(r'C:\Users\Gizem\Downloads\test_data.csv')
+test_dataset = pd.read_csv(r'C:\Users\Fatma\Desktop\test.csv')    
 #---------------------------------------------------------------------------------------
-egitim.info()
-
 train_dataset.info()
 test_dataset.info()
 
