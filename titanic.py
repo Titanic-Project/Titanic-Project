@@ -329,21 +329,21 @@ df_all[['Ticket_Frequency','Survived']].groupby('Ticket_Frequency').mean()
 
 #7-Title
 
-#İsim bize bir yolcunun sosyoekonomik durumu hakkında çok önemli bilgiler veriyor. 
-#Birinin evli olup olmadığı veya daha yüksek bir sosyal statünün göstergesi olabilecek resmi bir unvanı olup olmadığı sorusuna cevap verebiliriz.
+# The name gives us very important information about the socioeconomic status of a traveler.
+# We can answer the question of whether someone is married or has an official title that may indicate a higher social status.
 
 df_all['Title'] = df_all['Name'].str.split(',', expand=True)[1].str.split('.',expand=True)[0]
 df_all['Is_Married'] = 0
 df_all['Is_Married'].loc[df_all['Title'] == 'Mrs'] =1
 df_all['Title'].nunique()
-#Veri setimizde pek çok farklı başlık var.
-# Yalnızca 10'dan fazla davaya sahip başlığı dikkate alıyoruz, diğerlerinin tümünü "misc" kategorisine atayacağız.
+# There are many different titles in our dataset.
+# We only consider the title with more than 10 cases, we will assign all others to the "misc" category.
 title_names = (df_all['Title'].value_counts() < 10)
 df_all['Title'] = df_all['Title'].apply(lambda x: 'Misc' if title_names.loc[x] == True else x)
 df_all.groupby('Title')['Title'].count()
                 
-#Yolcuların soyadlarını belirleyeceğiz. 
-#Daha sonra hem eğitimde hem de test veri setinde bulunan herhangi bir aile üyesi olup olmadığını görebiliriz.
+# We will determine the passengers' surnames.
+# We can then see if there are any family members included in both the training and testing data set.
 import string
 
 def extract_surname(data):
@@ -365,20 +365,20 @@ df_all['Family'] = extract_surname(df_all['Name'])
 
 df_all['Family'].nunique()
 
-#Yüksek lisans derecesine sahip kişiler ve kadınlar, önemli ölçüde daha sık hayatta kaldılar ve aynı zamanda ortalama olarak daha büyük ailelere sahipler. 
-#Eğitim veri setinde bir usta veya kadın hayatta kalan olarak işaretlenirse, test veri setindeki aile üyelerinin de hayatta kalacağını varsayıyoruz.
+# People and women with a master's degree have survived significantly more often and also have larger families on average.
+# We assume that if a master or woman is marked as a survivor in the training dataset, the family members in the test dataset will also survive.
       
 df_all[['Title','Survived','Family_Size']].groupby('Title').mean()
 
 print('Survival rates grouped by families of women in dataset:')
 df_all.loc[(df_all['Sex'] == 'female') & (df_all['Family_Size'] > 1)].groupby('Family')['Survived'].mean().hist(figsize=(12,5))
 
-#Aile büyüklüğü 2 veya daha fazla olan kadınlarda, çoğu zaman hepsi veya hiçbiri ölmez.
+# Women with a family size of 2 or more often die all or none
 
 master_families = df_all.loc[df_all['Title'] == 'Master']['Family'].tolist()
 df_all.loc[df_all['Family'].isin(master_families)].groupby('Family')['Survived'].mean().hist(figsize=(12,5))
 
-#Aynısı, unvanında kaptan olan yolcu aileleri için de geçerlidir.
+# The same applies to families of passengers with captains in their title.
 
 women_rate = df_all.loc[(df_all['Sex'] == 'female') & (df_all['Family_Size'] > 1 )].groupby('Family')['Survived'].mean()
 master_rate = df_all.loc[df_all['Family'].isin(master_families)].groupby('Family')['Survived'].mean()
@@ -395,19 +395,20 @@ df_all['Survival_quota_NA'] = 1
 df_all.loc[df_all['Survival_quota'].isnull(), 'Survival_quota_NA']=0                                                                            
 df_all['Survival_quota']=df_all['Survival_quota'].fillna(0)   
 
-drop_values = ['Name','Ticket','Cabin'] #datamızı incelediğimizde bazı sütünlerin bizim verimiz için gerekli olmadığını fark edip çıkartık.
+#When we examined our dataset, we found that it is not necessary to process some columns.
+drop_values = ['Name','Ticket','Cabin'] 
 train_dataset = train_dataset.drop(drop_values,axis=1)
 
-train_dataset = train_dataset.dropna() #bazı eksik verileri temizledik.
-
+# we cleared some missing data.
+train_dataset = train_dataset.dropna()
 train_dataset.info()
 
 passengers = []
 columnss = ['Pclass','Sex','Embarked']  #Pclass:yolcu sınıfı,Embarked:biniş noktası
 for columnss in sutunlar:
-    passengers.append(pd.get_dummies(train_dataset[columnss])) #kategorik verileri yer tutucu ile değiştirmek için get_dummies kullandık.
+    passengers.append(pd.get_dummies(train_dataset[columnss])) #We used get_dummies to replace categorized data with a placeholder.
 
-passengers = pd.concat(passengers, axis=1) #Dataframe elde etmek için concat methodu kullandık.
+passengers = pd.concat(passengers, axis=1) #We used the concat method to obtain the Dataframe.
 print(passengers)
 
 passengers = passengers.drop(['female'], axis=1)
@@ -421,8 +422,7 @@ Y = train_dataset['Survived'].values
 
 X = np.delete(X,1,axis=1)
 
-X_train, X_test, y_train, y_test=train_test_split(X,Y,test_size=0.3, random_state=0) #test size 30 atadık train test de 70 oldu
-
+X_train, X_test, y_train, y_test=train_test_split(X,Y,test_size=0.3, random_state=0) #test size is %30 and train size is %70
 siniflama = tree.DecisionTreeClassifier(max_depth=5)
 siniflama.fit(X_train,y_train)
 skor = siniflama.score(X_test,y_test)
@@ -433,9 +433,10 @@ tahminler = siniflama.predict(X)
 as_egitim = accuracy_score(tahminler, Y)
 
 print("Doğruluk tablosu skoru: ", as_egitim)
-#Yukarıda uygulamanın doğruluk skorunu elde ettik ancak, doğruluk skoru tek başına bir başarı ölçme kriteri olamaz.
-#Diğer kriterlere (hata oranı, hassasiyet vb.) bakabilmek için confusion matrix kullandık. 
-#Bunun için pandas kütüphanesinden crosstab() metodu kullandık.
+
+# We obtained the accuracy score of the application above, but the accuracy score alone cannot be a benchmark for success.
+# We used a confusion matrix to look at other criteria (error rate, sensitivity, etc.).
+#For this, we used the crosstab () method from the pandas library.
 
 confusion_matrix = pd.crosstab(Y, tahminler, rownames=['Gerçek'], colnames=['Tahmin'])
 print (confusion_matrix)
