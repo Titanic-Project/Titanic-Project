@@ -204,16 +204,16 @@ display(test_dataset.isnull().sum())
 def concat_df(train_dataset,test_dataset):
     return pd.concat([train_dataset, test_dataset], sort= True).reset_index(drop=True)
 
-#Eğitim verilerinde yaş, kabin ve başlangıçlar sütununda eksiklerimiz var.
-#Test veri setinde yaş, ücret ve kabin sütununda eksiklikler var. 
-#Her iki veri setini birleştireceğiz ve tüm veri seti için veri temizliğini gerçekleştireceğiz.
+# We are missing in the age, cabin and beginnings column in the training data.
+#Test data set has missing age, wage and cabin column.
+# We will merge both data sets and perform data cleaning for the entire data set.
 #train ve test 
 
 df_all = concat_df(train_dataset , test_dataset)
 
 #1-Age
 
-#yaş sütünumuzun yüzdelik olarak ne kadar eksik verisi olduğunu görmek için
+#To see how much data our age column is missing as a percentage
 print("Missings for Age in the entire data set: " + str(df_all['Age'].isnull().sum()))
 print("Missings in percentage: " + str(round(df_all['Age'].isnull().sum()/len(df_all)*100,0)))
 
