@@ -8,7 +8,7 @@ Most of us have watched the movie Titanic or know about this incident. So, with 
 
 Structure: Directory (and file) structure in the repository,
 
-Team & Roles:
+Team & Roles:Team name is TitanicTeam
 
 Fatma Karadağ & Gizem Pesen 
 
