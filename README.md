@@ -10,6 +10,10 @@ Structure: Directory (and file) structure in the repository,
 
 Team & Roles:
 
+Fatma Karadağ & Gizem Pesen 
+
 Language, version, and main file: 
+
+Python3
 
 Additional: 
