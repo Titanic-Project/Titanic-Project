@@ -26,6 +26,8 @@ egitim.info()
 
 train_dataset.info()
 test_dataset.info()
+
+train_dataset.describe()
 #---------------------------------------------------------------------------------------
 #Sütunları kontrol ediyoruz.
 
@@ -50,6 +52,11 @@ train_dataset['Survived'].mean()
 train_dataset.head()
 
 #---------------------------------------------------------------------------------------
+#Sex
+print('Number of male passengers: ', len(egitim.groupby('Sex').groups['male']))   #gruplandır
+print('Number of female passengers: ', len(egitim.groupby('Sex').groups['female']))
+
+
 
 #Eksik sütünları göster
 
