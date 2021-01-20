@@ -422,17 +422,7 @@ Y = train_dataset['Survived'].values
 
 X = np.delete(X,1,axis=1)
 
-X_train, X_test, y_train, y_test=train_test_split(X,Y,test_size=0.3, random_state=0) #test size is %30 and train size is %70
-siniflama = tree.DecisionTreeClassifier(max_depth=5)
-siniflama.fit(X_train,y_train)
-skor = siniflama.score(X_test,y_test)
 
-print("Score: ",skor)
-
-tahminler = siniflama.predict(X)
-as_egitim = accuracy_score(tahminler, Y)
-
-print("Doğruluk tablosu skoru: ", as_egitim)
 
 # We obtained the accuracy score of the application above, but the accuracy score alone cannot be a benchmark for success.
 # We used a confusion matrix to look at other criteria (error rate, sensitivity, etc.).
