@@ -82,6 +82,29 @@ plt.show()
 
 print (train_dataset[["Sex", "Survived"]].groupby(['Sex'], as_index=False).mean())
 
+# Visualization of Age
+
+# We can also diversify age groups by defining a function:
+def age_distribution(x):
+    if x>=0 and x <16:
+        return 'Child'
+    elif x>=16 and x<=24:
+        return 'Young'
+    else:
+        return 'Adult'
+    
+train_dataset['Age'].apply(age_distribution).value_counts()
+
+# Visualization of percentages of passengers by age
+train_dataset['Age'].apply(age_distribution).value_counts().plot(kind='pie', autopct='%1.0f%%')
+plt.title('Distribution of passengers by age')
+plt.show()
+
+print ('Average age of adult male passengers:', adult_male_passenger['Age'].mean())
+print ('Average age of adult female passengers:', adult_female_passenger['Age'].mean())
+print ('Average age of kid passengers:', kid_passenger['Age'].mean())
+
+
 # ANALYZING OF SURVIVINGS
 
 #Number of surviveds and not-surviveds
