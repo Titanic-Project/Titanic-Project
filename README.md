@@ -16,7 +16,12 @@ Team name is TitanicTeam
 
 Fatma Karadağ & Gizem Pesen 
 
+Roles:
 
+When we both add code and edit, we added or deleted the libraries necessary.
+We used the articles on Kaggle to get enough information about our data.
+We wrote all the lines of code together.
+We just did the experiments on our own pc.
 
 
 # Language, version, and main file: 
