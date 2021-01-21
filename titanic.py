@@ -454,3 +454,8 @@ score = model.score(X_test, y_test)
 
 print(score)
 
+predictions = siniflama.predict(X)
+accuracy = accuracy_score(predictions, Y)
+
+print("Doğruluk tablosu skoru: ", accuracy )
+
