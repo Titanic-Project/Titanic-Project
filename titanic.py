@@ -105,6 +105,32 @@ print ('Average age of adult female passengers:', adult_female_passenger['Age'].
 print ('Average age of kid passengers:', kid_passenger['Age'].mean())
 
 
+# Pclass
+
+# Number of passengers according to class
+# Pclass: A proxy for socio-economic status 1st = Upper 2nd = Middle, 3rd = Lower)
+train_dataset['Pclass'].value_counts()
+
+# there is no missing value on this feature
+print (train_dataset[['Pclass', 'Survived']].groupby(['Pclass'], as_index=False).mean())
+
+train_dataset['Pclass'].value_counts().plot(kind='barh', color='green', figsize=[16,4])
+plt.xlabel('Frequency')
+plt.ylabel('Passenger class')
+plt.show()
+
+# Visualition of Embarked
+
+# Filling the two missing values in 'Embarked' with the most occurred value, which is "S"
+train_dataset['Embarked'] = train_dataset['Embarked'].fillna('S')
+# Visualization of number of passengers by embarking ports 
+train_dataset['Embarked'].value_counts().plot(kind='bar')
+plt.title('Embarking ports')
+plt.ylabel('Frequency')
+plt.xlabel('S=Southampton, C=Cherbourg, Q=Queenstown')
+plt.show()
+
+
 # ANALYZING OF SURVIVINGS
 
 #Number of surviveds and not-surviveds
