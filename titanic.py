@@ -16,13 +16,9 @@ from sklearn.datasets import make_classification
 
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score, log_loss
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 # Test and Train Datasets
 
@@ -443,8 +439,7 @@ print("Doğruluk tablosu skoru: ", as_egitim)
 confusion_matrix = pd.crosstab(Y, tahminler, rownames=['Gerçek'], colnames=['Tahmin'])
 print (confusion_matrix)
 
-#--------------------------------------------------------
-#X_test = StandardScaler().fit_transform(test_dataset)       
+#--------------------------------------------------------   
 model = RandomForestClassifier(criterion = 'gini',n_estimators=1750,max_depth=7,min_samples_split =6, min_samples_leaf = 6, max_features = 'auto', oob_score= True, random_state=42, n_jobs=-1,verbose =1)
             
 model.fit(X_train, y_train)
