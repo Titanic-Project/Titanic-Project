@@ -31,3 +31,8 @@ We only divided the classification methods. One calculated score with the Decisi
 Python3 
 
 Additional: 
+
+One of us added the data of our data.
+Generally, one of us opened the files and we mutually added and subtracted them.
+The last commets we made are for you to gain better access and understanding because we added more clear comment lines and deleted some of them.
+Most of our mutual code experiments are a bit old, but our experiments are either correcting the deficiencies or adding sub-problems (our theses) that we have produced.
