@@ -23,7 +23,64 @@ from sklearn.ensemble import RandomForestClassifier
 # Test and Train Datasets
 
 # We define the train dataset with pandas library.
+train_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\train.csv')   #for Fatma (r'C:\Users\Fatma\Desktop\new\train.csv')
 
+# We define the test dataset with pandas library.
+test_dataset = pd.read_csv(r'C:\Users\pesen\Desktop\new\test.csv')   # for Fatma (r'C:\Users\Fatma\Desktop\new\test.csv')
+
+
+train_dataset.info()
+test_dataset.info()
+
+train_dataset.describe()
+
+# We check the columns.
+
+print(train_dataset.columns )
+print(test_dataset.columns)
+
+# Print Columns and Rows for Train and Test
+print('\ntrain dataset: %s, test dataset %s' %(str(train_dataset.shape), str(test_dataset.shape)) )
+
+# Total number of passengers in two data sets
+print(train_dataset.shape[0] + test_dataset.shape[0])
+
+# Survival rate
+train_dataset['Survived'].mean()
+
+# First 5 data
+train_dataset.head()
+
+male_passenger = train_dataset[train_dataset['Sex']== 'male']
+female_passenger = train_dataset[train_dataset['Sex']== 'female']
+
+# Kid passengers' dataframe. I accepted under of 16 years old as kid.
+kid_passenger = train_dataset[train_dataset['Age'] < 16]
+male_kid_passenger = kid_passenger[kid_passenger['Sex'] == 'male']
+female_kid_passenger = kid_passenger[kid_passenger['Sex'] == 'female']
+
+# Creating adult male and female dataframes by dropping kid passengers
+adult_male_passenger = male_passenger.drop(male_kid_passenger.index[:])
+adult_female_passenger = female_passenger.drop(female_kid_passenger.index[:])
+
+# Number of passengers according to sex and age
+print ('Number of all passengers:', len(train_dataset))
+print ('Number of male passengers:', len(male_passenger))
+print ('Number of female passengers:', len(female_passenger))
+print ('Number of adult male passengers:', len(adult_male_passenger))
+print ('Number of adult female passengers:', len(adult_female_passenger))
+print ('Number of kid passengers:', len(kid_passenger))
+
+# Visualition of Sex
+
+# Visualization of percentages of passengers by sex on pie chart
+x = [len(male_passenger), len(female_passenger)]
+label = ['Male', 'Female']
+plt.pie(x, labels = label, autopct = '%1.01f%%')
+plt.title('Distribution of passengers by sex')
+plt.show()
+
+print (train_dataset[["Sex", "Survived"]].groupby(['Sex'], as_index=False).mean())
 
 # ANALYZING OF SURVIVINGS
 
