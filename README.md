@@ -22,6 +22,8 @@ When we both add code and edit, we added or deleted the libraries necessary.
 We used the articles on Kaggle to get enough information about our data.
 We wrote all the lines of code together.
 We just did the experiments on our own pc.
+We thought theses about what the sub-problems would be.
+We only divided the classification methods. One calculated score with the DecisionTreeClassifier and other with RandomForestClassifier
 
 
 # Language, version, and main file: 
