@@ -36,6 +36,3 @@ One of us added the data of our data.
 Generally, one of us opened the files and we mutually added and subtracted them.
 The last commets we made are for you to gain better access and understanding because we added more clear comment lines and deleted some of them.
 Our cross-code trials are a thing of the past because we've committed to it multiple times., but our experiments are either correcting the deficiencies or adding sub-problems (our theses) that we have produced.
-
-Cabin
-As you can see in the picture, the cabins of the first class were on decks A, B or C, a mixture of these were on D or E and the third class was mainly on f or g. We can recognize the deck from the first letter.
