@@ -37,4 +37,4 @@ Generally, one of us opened the files and we mutually added and subtracted them.
 The last commets we made are for you to gain better access and understanding because we added more clear comment lines and deleted some of them.
 Our cross-code trials are a thing of the past because we've committed to it multiple times., but our experiments are either correcting the deficiencies or adding sub-problems (our theses) that we have produced.
 
-Our report was 8 pages, but it was so that you can enjoy reading our report by adding contents, explaining what we have done step by step and adding visuals.
+
